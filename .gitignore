@@ -1,0 +1,62 @@
+# Python
+backend/venv/
+**/__pycache__/
+**/*.pyc
+*.pyc
+
+# Environment
+.env
+!.env.example
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# OS
+.DS_Store
+Thumbs.db
+Once done, run tree /F again from inside backend/ only (not root) so the venv doesn't flood the output:
+
+powershell
+cd backend
+tree /F
+Share what you see and we'll move to Task 2 — Python virtual environment + installing dependencies.
+
+i dont want testiing so no test folder required
+__init__.py  can be added later
+
+5:03 PM
+Perfect, noted. So your current structure looks correct then — no tests, no __init__.py for now.
+
+Two quick fixes still needed
+Fix 1 — Move venv inside backend
+
+Right now venv is sitting at the root level. Run this from the root agentic-ai-platform/ folder:
+
+powershell
+Remove-Item -Recurse -Force venv
+cd backend
+python -m venv venv
+Fix 2 — Add .gitignore at root
+
+powershell
+cd ..
+New-Item .gitignore -Force
+```
+
+Paste this inside it:
+```
+backend/venv/
+**/__pycache__/
+**/*.pyc
+.env
+!.env.example
+frontend/node_modules/
+frontend/dist/
+.DS_Store
+Thumbs.db
+
+
+
+
+
