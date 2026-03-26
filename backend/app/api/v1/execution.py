@@ -13,7 +13,7 @@ async def run_agent(agent_name: str, request: ExecutionRequest):
     logger.info(f"Executing agent: {agent_name}")
 
     try:
-        return execution_service.run_agent(agent_name, request.input)
+        return await execution_service.run_agent(agent_name, request.input)
     except Exception as e:
         logger.error(f"Execution failed: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))

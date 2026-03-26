@@ -12,16 +12,10 @@ class WorkflowService:
 
     def get_workflow(self, name: str):
         logger.info(f"Fetching workflow: {name}")
-
-        workflows = workflow_registry.list_workflows()
-
-        if name not in workflows:
+        workflow = workflow_registry.get(name)
+        if not workflow:
             logger.error(f"Workflow not found: {name}")
             raise ValueError(f"Workflow '{name}' not found")
-
-        return {
-            "name": name
-        }
-
+        return {"name": workflow.name, "description": workflow.description}
 
 workflow_service = WorkflowService()
