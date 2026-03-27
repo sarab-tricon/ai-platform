@@ -1,26 +1,26 @@
-import importlib, pkgutil, inspect, logging
-import app.workflows.agents as agents_pkg
 from app.workflows.base_workflow import BaseWorkflow
+from app.workflows.agents.echo_agent import EchoAgent
+from app.core.logging import get_logger
+logger = get_logger(__name__)
 
-logger = logging.getLogger(__name__)
 
 class WorkflowRegistry:
     def __init__(self):
-        self._workflows = {}
-        self._autodiscover()
+        self._workflows: dict[str, BaseWorkflow] = {} 
+        self._register_all()
 
-    def _autodiscover(self):
-        for _, module_name, _ in pkgutil.iter_modules(agents_pkg.__path__):
-            module = importlib.import_module(f"app.workflows.agents.{module_name}")
-            for _, cls in inspect.getmembers(module, inspect.isclass):
-                if issubclass(cls, BaseWorkflow) and cls is not BaseWorkflow and hasattr(cls, "name"):
-                    self._workflows[cls.name] = cls()
-                    logger.info(f"Workflow registered: {cls.name}")
+    def _register_all(self):
+        workflows = [
+            EchoAgent(),
+        ]
+        for workflow in workflows:
+            self._workflows[workflow.id] = workflow  # stored by UUID
+            logger.info(f"Workflow registered: name={workflow.name} id={workflow.id}")
 
-    def get(self, name: str):
-        return self._workflows.get(name)
+    def get(self, id: str) -> BaseWorkflow | None:
+        return self._workflows.get(id)
 
-    def list_workflows(self):
-        return list(self._workflows.keys())
+    def list_workflows(self) -> list[BaseWorkflow]:
+        return list(self._workflows.values())  # return objects, not just keys
 
 workflow_registry = WorkflowRegistry()

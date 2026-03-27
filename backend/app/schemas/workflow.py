@@ -1,20 +1,26 @@
-from pydantic import BaseModel
-from typing import List, Optional
-import logging
+from pydantic import BaseModel, Field
+from typing import Any, Optional, List
 
-logger = logging.getLogger(__name__)
-
-
+# Workflow schemas
 class WorkflowResponse(BaseModel):
+    id: str
     name: str
     description: Optional[str] = None
-
 
 class WorkflowListResponse(BaseModel):
-    workflows: List[str]
-
+    workflows: List[WorkflowResponse]
 
 class WorkflowDetailResponse(BaseModel):
+    id: str
     name: str
-    nodes: Optional[List[str]] = None
     description: Optional[str] = None
+
+# Execution schemas
+class ExecutionRequest(BaseModel):
+    input: dict[str, Any] = Field(..., description="Input payload for workflow")
+
+class ExecutionResponse(BaseModel):
+    workflow_id: str
+    workflow_name: str
+    status: str
+    data: dict[str, Any]
